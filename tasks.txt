@@ -1,2 +1,5 @@
-admin, Register Users with task_manager.py, Use task_manager.py to add the usernames and passwords for all team members that will be using this program., 10 Oct 2019, 20 Oct 2019, No
+﻿admin, Register Users with task_manager.py, Use task_manager.py to add the usernames and passwords for all team members that will be using this program., 10 Oct 2019, 20 Oct 2019, No
 admin, Assign initial tasks, Use task_manager.py to assign each team member with appropriate tasks, 10 Oct 2019, 25 Oct 2019, No
+prince, Update files, Check all the text files and remove outdated information, 06 Mar 2026, 16 Mar 2026, No
+boss, Report all tasks, Complie a report of all the tasks , 06 Mar 2026, 30 Mar 2026, No
+admin, Update users for the 2026, Remove any users that are no longer at the company and register new users, 06 Mar 2026, 30 Mar 2026, No

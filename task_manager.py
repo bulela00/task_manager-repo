@@ -1,5 +1,5 @@
 #=====importing libraries===========
-from datetime import date
+from datetime import date, datetime
 
 #=====Functions=====
 #This functions receives a line of the task information and splits it into the pieces of task information.
@@ -26,7 +26,7 @@ with open('user.txt', 'r', encoding='utf-8-sig') as usersfile:    #The usernames
         temp = temp.split(", ")
         usernames.append(temp[0])    #The usernames from the file are saved in a list of usernames                            
         passwords[temp[0]] = temp[1]    #Passwords are stored in the dictionary in username: password pairs
-
+ 
 user_valid = False
 user = input("Please enter your username: ")    #Requests username from user
 while user_valid == False:        
@@ -44,7 +44,7 @@ while password_valid == False:
             password_valid = True
       else:
             password = input("You have entered an invalid password. Please try again: ")
-
+## Need to add a limit on the number of attempts 
 
 while True:
     # Present the menu to the user and 
@@ -86,7 +86,7 @@ e - exit
                 new_password = input("Enter new password: ")    #Requests input of new password
                 confirm_password = input("Confirm password: ")    #Request of password confirmation
                 if confirm_password == new_password:
-                    reg_info = new_user + ", " + new_password
+                    reg_info = new_user + ", " + new_password  # user info saved in reg_info in the user.txt format
                     with open('user.txt','a') as userfile:     #Writing new username and password to user.txt file
                         userfile.write("\n" + reg_info)
                     
@@ -101,24 +101,54 @@ e - exit
             
     elif menu == 'a':
         #This code block will allow a user to add a new task to task.txt file
-        user_ = input("Enter the username of the person whom the task is assisgned to: ")
-        task_title = input("Enter the title of the task: ")
-        task_description = input("Enter the description of the task: ")
-        due_date = input("Enter the due date of the task: ")
-        todays_date = date.today()    
-        current_date = todays_date.strftime("%d %b %Y")   #Formatting the current date
-        task_ = ", ".join([user_, task_title, task_description,current_date, due_date, "No" ])
-        with open('tasks.txt','a') as taskfile:
-             taskfile.write("\n" + task_)    #Writing the task information to the tasks.txt
+        user_ = input("Enter the username of the person whom the task is assisgned to: ") # Request the username 
+        
+        if user_ in passwords :
+            task_title = input("Enter the title of the task: ")
+            task_description = input("Enter the description of the task: ")
+            due_date = input("Enter the due date of the task (format: DD Mon YYYY, e.g. 06 Mar 2026 ): ") # Format of the date needs to be specified for uniformity
+            while True: 
+                # try/except for possible date format errors
+                try :
+                     datetime.strptime(due_date, "%d %b %Y")
+                     break
+                
+                except ValueError:
+                     print('Invalid format. The correct format: DD Mon YYYY, e.g. 06 Mar 2026 ')
+                     dday = input("Enter the day (01-31): ")
+                     dmonth = input("Enter the abbreviated month name (Jan, Feb, Mar):") 
+                     dyear = input("Enter the full year (e.g. 2026): ")
+                     due_date = " ".join([dday, dmonth, dyear])
+            
+            todays_date = date.today()    
+            current_date = todays_date.strftime("%d %b %Y")   #Formatting the current date
+            task_ = ", ".join([user_, task_title, task_description,current_date, due_date, "No" ])
+            with open('tasks.txt','a') as taskfile:
+                taskfile.write( "\n" + task_)   #Writing the task information to the tasks.txt
+
+            # As an added precaution remove any empty lines in the file
+            # Read all lines and filter out empty lines  
+            with open('tasks.txt', 'r', encoding='utf-8-sig') as taskfile: 
+                lines = [line for line in taskfile if line.strip()]
+
+            with open("tasks.txt", "w", encoding='utf-8-sig') as taskfile: 
+                 taskfile.writelines(lines)
+             
+        else:
+             print('The username is unknown.')
+             break
+
         
         
     elif menu == 'va':
-    #This code block will read the task from task.txt file and  
+    #This code block will read all the tasks from task.txt file and  
         with open('tasks.txt', 'r', encoding='utf-8-sig') as tasklines:
              for line in tasklines:
+                  line = line.strip()
                   print_task_info(line)    #The function called will print out the task information of the given line
 
     elif menu == 'vm':
+        # This code block will read all the tasks of the user logged in
         pass
         #This code block will read the task from task.txt file and
         #print to the console in the format of Output 2 presented in the PDF
@@ -134,7 +164,7 @@ e - exit
                           
 
     elif menu == 'e':
-        print('Goodbye!!!')
+        print('Goodbye.')
         exit()
 
 

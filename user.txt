@@ -1,3 +1,5 @@
 admin, adm1n
 news, n3ws
 done, don3
+prince, pr1nce
+boss, b05s
